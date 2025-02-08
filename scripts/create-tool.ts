@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import type { PathLike } from "node:fs";
-import { promises as fs } from "node:fs";
-import path from "node:path";
-import readline from "node:readline";
-import { fileURLToPath } from "node:url";
+import type { PathLike } from 'node:fs';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import readline from 'node:readline';
+import { fileURLToPath } from 'node:url';
 
 // 1) Define __dirname in ES Module context
 const __filename = fileURLToPath(import.meta.url);
@@ -20,25 +20,28 @@ function toCamelCase(input: string) {
   // Lowercase everything and remove invalid characters
   const cleaned = input
     .toLowerCase()
-    .replace(/[^a-z0-9\s]+/g, " ")
+    .replace(/[^a-z0-9\s]+/g, ' ')
     .trim();
 
   // Split on spaces to get words
   const words = cleaned.split(/\s+/).filter(Boolean);
-  if (!words.length) return "";
+  if (!words.length) return '';
 
   // Join in lowerCamelCase
   const [first, ...rest] = words;
-  return first + rest.map((w) => w[0].toUpperCase() + w.slice(1)).join("");
+  return first + rest.map((w) => w[0].toUpperCase() + w.slice(1)).join('');
 }
 
 // 4) Function to update src/tools/index.ts
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-async function updateToolsIndex(toolsIndexPath: PathLike | fs.FileHandle, toolName: string) {
+async function updateToolsIndex(
+  toolsIndexPath: PathLike | fs.FileHandle,
+  toolName: string
+) {
   // 4.a) Read the existing file
   let contents: string;
   try {
-    contents = await fs.readFile(toolsIndexPath, "utf8");
+    contents = await fs.readFile(toolsIndexPath, 'utf8');
   } catch (error) {
     throw new Error(
       `Could not read the tools index file at ${toolsIndexPath}. ` +
@@ -55,7 +58,7 @@ async function updateToolsIndex(toolsIndexPath: PathLike | fs.FileHandle, toolNa
     },`;
 
   // Split the file into lines
-  const lines = contents.split("\n");
+  const lines = contents.split('\n');
 
   // Find last import statement to insert our import just after it
   let lastImportIndex = -1;
@@ -72,7 +75,7 @@ async function updateToolsIndex(toolsIndexPath: PathLike | fs.FileHandle, toolNa
     lines.unshift(importLine);
   }
 
-  // 4.d) Insert a new item in createTools()’s return array
+  // 4.d) Insert a new item in createTools()'s return array
   // We'll look for `return [ ... ]`, then insert newEntry before the `];`.
   const returnStartRegex = /return\s*\[\s*/;
   const returnEndRegex = /\]\s*;/;
@@ -92,7 +95,7 @@ async function updateToolsIndex(toolsIndexPath: PathLike | fs.FileHandle, toolNa
   if (arrayStartIndex === -1 || arrayEndIndex === -1) {
     throw new Error(
       `Could not locate 'return [ ... ];' in createTools() function. ` +
-        "Please ensure the file structure matches the expected pattern."
+        'Please ensure the file structure matches the expected pattern.'
     );
   }
 
@@ -100,8 +103,8 @@ async function updateToolsIndex(toolsIndexPath: PathLike | fs.FileHandle, toolNa
   lines.splice(arrayEndIndex, 0, `    ${newEntry}`);
 
   // Rejoin and overwrite
-  const updatedContents = lines.join("\n");
-  await fs.writeFile(toolsIndexPath, updatedContents, "utf8");
+  const updatedContents = lines.join('\n');
+  await fs.writeFile(toolsIndexPath, updatedContents, 'utf8');
 }
 
 // 5) Main script
@@ -109,19 +112,19 @@ async function main() {
   try {
     // Prompt user for tool name
     const toolName = await new Promise<string>((resolve) => {
-      rl.question("Enter the name of the new tool: ", (userInput) => {
+      rl.question('Enter the name of the new tool: ', (userInput) => {
         const camel = toCamelCase(userInput);
         resolve(camel);
       });
     });
 
     if (!toolName) {
-      throw new Error("Tool name cannot be empty");
+      throw new Error('Tool name cannot be empty');
     }
 
     // Validate basic lowerCamelCase structure
     if (!/^[a-z][a-zA-Z0-9]*$/.test(toolName)) {
-      throw new Error("Tool name must be a valid lowerCamelCase identifier");
+      throw new Error('Tool name must be a valid lowerCamelCase identifier');
     }
 
     // Capitalized version for types, e.g. "someFunction" → "SomeFunction"
@@ -129,18 +132,25 @@ async function main() {
 
     // Notify user of upcoming actions
     console.log(`\nWe are about to create a new tool named "${toolName}" at:`);
-    console.log(`  src/tools/${toolName}/index.ts, schema.ts, ${toolName}.test.ts`);
-    console.log(`\nOptionally, we can add "${toolName}" to "src/tools/index.ts" for you.`);
+    console.log(
+      `  src/tools/${toolName}/index.ts, schema.ts, ${toolName}.test.ts`
+    );
+    console.log(
+      `\nOptionally, we can add "${toolName}" to "src/tools/index.ts" for you.`
+    );
 
     // Ask user if they want to automatically update tools/index.ts
     const confirmUpdate = await new Promise<string>((resolve) => {
-      rl.question(`Do you want to automatically add "${toolName}" to tools index? (y/N) `, (ans) => {
-        resolve(ans.trim().toLowerCase());
-      });
+      rl.question(
+        `Do you want to automatically add "${toolName}" to tools index? (y/N) `,
+        (ans) => {
+          resolve(ans.trim().toLowerCase());
+        }
+      );
     });
 
     // Create tool directory
-    const toolDir = path.join(__dirname, "src", "tools", toolName);
+    const toolDir = path.join(process.cwd(), 'src', 'tools', toolName);
     await fs.mkdir(toolDir, { recursive: true });
 
     // ---------------------------------------------------------------------
@@ -161,7 +171,7 @@ export const ${toolName} = (args: ${capitalToolName}Schema): string => {
 };
 
 export const ${toolName}Tool: ToolRegistration<${capitalToolName}Schema> = {
-  name: "${toolName.replace(/([A-Z])/g, "_$1").toLowerCase()}",
+  name: "${toolName.replace(/([A-Z])/g, '_$1').toLowerCase()}",
   description: "A generic tool example",
   inputSchema: makeJsonSchema(${toolName}Schema),
   handler: (args: ${capitalToolName}Schema) => {
@@ -191,7 +201,7 @@ export const ${toolName}Tool: ToolRegistration<${capitalToolName}Schema> = {
   },
 };
 `;
-    await fs.writeFile(path.join(toolDir, "index.ts"), indexContent);
+    await fs.writeFile(path.join(toolDir, 'index.ts'), indexContent);
 
     // ---------------------------------------------------------------------
     // 2) Create schema.ts (basic Zod object, matching your type name)
@@ -205,7 +215,7 @@ export const ${toolName}Schema = z.object({
 
 export type ${capitalToolName}Schema = z.infer<typeof ${toolName}Schema>;
 `;
-    await fs.writeFile(path.join(toolDir, "schema.ts"), schemaContent);
+    await fs.writeFile(path.join(toolDir, 'schema.ts'), schemaContent);
 
     // ---------------------------------------------------------------------
     // 3) Create a minimal test file
@@ -231,16 +241,18 @@ describe("${toolName} Tool", () => {
     // ---------------------------------------------------------------------
     // 4) If user wants to update src/tools/index.ts, do so now
     // ---------------------------------------------------------------------
-    if (confirmUpdate === "y" || confirmUpdate === "yes") {
-      const toolsIndexPath = path.join(__dirname, "src", "tools", "index.ts");
+    if (confirmUpdate === 'y' || confirmUpdate === 'yes') {
+      const toolsIndexPath = path.join(__dirname, 'src', 'tools', 'index.ts');
       await updateToolsIndex(toolsIndexPath, toolName);
-      console.log(`\nSuccessfully created new tool "${toolName}" and updated src/tools/index.ts.\n`);
+      console.log(
+        `\nSuccessfully created new tool "${toolName}" and updated src/tools/index.ts.\n`
+      );
     } else {
       console.log(`\nSuccessfully created new tool "${toolName}".\n`);
-      console.log("(Skipping automatic update of src/tools/index.ts.)\n");
+      console.log('(Skipping automatic update of src/tools/index.ts.)\n');
     }
   } catch (error) {
-    console.error("Error creating tool:", error);
+    console.error('Error creating tool:', error);
   } finally {
     rl.close();
   }

@@ -1,6 +1,6 @@
-# MCP Server Starter
+# MCP Scryfall
 
-A production-ready starter template for building Model Context Protocol (MCP) servers with TypeScript.
+An MCP server for Scryfall's Magic: The Gathering card search that lets you search cards directly in Claude using Scryfall's powerful search syntax.
 
 ## 🚀 Quick Start
 
@@ -9,6 +9,61 @@ A production-ready starter template for building Model Context Protocol (MCP) se
    ```bash
    bun install
    ```
+3. Build the project:
+   ```bash
+   bun run build
+   ```
+
+## 🎴 Using the Card Search Tool
+
+The search tool supports Scryfall's full search syntax. Here are some example queries:
+
+- `c:red t:dragon` - Find red dragons
+- `f:standard r:mythic` - Find mythic rares in Standard
+- `o:flying pow>3` - Find creatures with flying and power greater than 3
+
+### Advanced Search Options
+
+You can customize your search with these optional parameters:
+
+- `unique`: How to handle duplicates ('cards', 'art', or 'prints')
+- `order`: Sort results by ('name', 'set', 'rarity', etc.)
+- `dir`: Sort direction ('asc' or 'desc')
+
+## 🛠️ Setting up with Claude Desktop
+
+1. Build the project:
+
+   ```bash
+   bun run build
+   ```
+
+2. Add to your Claude Desktop config:
+   ```json
+   {
+     "mcpServers": {
+       "scryfall": {
+         "command": "node",
+         "args": ["/path/to/your/project/dist/main.js"]
+       }
+     }
+   }
+   ```
+
+### Installing from npm (after publishing)
+
+Alternatively, you can install directly from npm:
+
+```json
+{
+  "mcpServers": {
+    "scryfall": {
+      "command": "npx",
+      "args": ["-y", "mcp-scryfall"]
+    }
+  }
+}
+```
 
 ## ✨ Key Features
 
@@ -43,6 +98,7 @@ bun run scripts/create-tool.ts <tool-name>
 ```
 
 This will:
+
 1. Create a new tool directory under `src/tools/<tool-name>`
 2. Generate the basic tool structure including:
    - index.ts (main implementation)
@@ -51,6 +107,7 @@ This will:
 3. Update the tools index file to export the new tool
 
 Example:
+
 ```bash
 bun run scripts/create-tool.ts weather
 ```
@@ -62,30 +119,12 @@ bun run scripts/create-tool.ts weather
 - **Lint code**: `bun run lint`
 - **Build project**: `bun run build`
 
-To add your development MCP server to Claude Desktop:
-
-1. Build the project:
-   ```bash
-   bun run build
-   ```
-2. Add to your Claude Desktop config:
-   ```json
-   // You only need the argument if you need to pass arguments to your server
-   {
-     "mcpServers": {
-       "your-server-name": {
-         "command": "node",
-         "args": ["/path/to/your/project/dist/main.js", "some_argument"]
-       }
-     }
-   }
-   ```
-
 ## 📜 Version Management
 
 This project uses [standard-version](https://github.com/conventional-changelog/standard-version) for automated version management. Run `bun run release` to create a new version.
 
 ### Commit Message Format
+
 - `feat`: New feature (bumps minor version)
 - `fix`: Bug fix (bumps patch version)
 - `BREAKING CHANGE`: Breaking change (bumps major version)
@@ -104,18 +143,4 @@ This project uses [standard-version](https://github.com/conventional-changelog/s
    ```bash
    npm publish
    ```
-Remember to update the version number using `bun run release` before publishing new versions.
-
-## Installing from npm (after publishing)
-
-Add to your Claude Desktop config:
-```json
-// You only need the argument if you need to pass arguments to your server
-{
-  "mcpServers": {
-    "your-server-name": {
-      "command": "npx",
-      "args": ["-y", "your-package-name", "some_argument"]
-    }
-  }
-}
+   Remember to update the version number using `bun run release` before publishing new versions.

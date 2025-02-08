@@ -1,23 +1,25 @@
 {
-  "name": "mcp-starter",
-  "description": "An opinionated starter project for Model Context Protocol (MCP) servers",
+  "name": "mcp-scryfall",
+  "description": "An MCP server for Scryfall's Magic: The Gathering card search",
   "author": {
-    "name": "Steven Stavrakis",
-    "email": "steven@stavrak.is",
-    "url": "https://stavrak.is",
-    "github": "https://github.com/StevenStavrakis"
+    "name": "Anders Haig",
+    "email": "me@andershaig.com",
+    "url": "https://andershaig.com",
+    "github": "https://github.com/andershaig"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/StevenStavrakis/mcp-starter.git"
+    "url": "https://github.com/andershaig/mcp-scryfall.git"
   },
   "module": "main.ts",
   "type": "module",
   "bin": {
-    "mcp-starter": "dist/index.js"
+    "mcp-scryfall": "dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prebuild": "bun scripts/prebuild.ts",
     "build": "bun build ./src/main.ts --outdir dist --target node && chmod +x dist/main.js",
@@ -47,6 +49,7 @@
     "@modelcontextprotocol/sdk": "^1.1.1",
     "@types/json-schema": "^7.0.15",
     "pretty-js-log": "^1.1.1",
+    "scryfall-sdk": "^5.0.3",
     "zod": "^3.24.1",
     "zod-to-json-schema": "^3.24.1"
   }
