@@ -76,7 +76,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function runServer() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('Todoist MCP Server running on stdio');
+  console.error('Scryfall MCP Server running on stdio');
 }
 
 runServer().catch((error) => {
