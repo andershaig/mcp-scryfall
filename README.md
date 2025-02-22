@@ -7,11 +7,11 @@ An MCP server for Scryfall's Magic: The Gathering card search that lets you sear
 1. Clone the repository
 2. Install dependencies:
    ```bash
-   bun install
+   npm install
    ```
 3. Build the project:
    ```bash
-   bun run build
+   npm run build
    ```
 
 ## 🎴 Using the Card Search Tool
@@ -35,7 +35,7 @@ You can customize your search with these optional parameters:
 1. Build the project:
 
    ```bash
-   bun run build
+   npm run build
    ```
 
 2. Add to your Claude Desktop config:
@@ -43,8 +43,7 @@ You can customize your search with these optional parameters:
    {
      "mcpServers": {
        "scryfall": {
-         "command": "node",
-         "args": ["/path/to/your/project/dist/main.js"]
+         "command": "/path/to/your/project/dist/main.js"
        }
      }
    }
@@ -75,7 +74,7 @@ Alternatively, you can install directly from npm:
 ## 📂 Project Structure
 
 ```
-mcp-starter/
+mcp-scryfall/
 ├── src/
 │   ├── tools/          # MCP tools implementation
 │   ├── utils/          # Shared utilities
@@ -94,7 +93,7 @@ mcp-starter/
 The project includes a script to help create new MCP tools:
 
 ```bash
-bun run scripts/create-tool.ts <tool-name>
+npm run scripts/create-tool.ts <tool-name>
 ```
 
 This will:
@@ -109,19 +108,19 @@ This will:
 Example:
 
 ```bash
-bun run scripts/create-tool.ts weather
+npm run scripts/create-tool.ts weather
 ```
 
 ## 🛠️ Development
 
-- **Run tests**: `bun test`
-- **Format code**: `bun run format`
-- **Lint code**: `bun run lint`
-- **Build project**: `bun run build`
+- **Run tests**: `npm test`
+- **Format code**: `npm run format`
+- **Lint code**: `npm run lint`
+- **Build project**: `npm run build`
 
 ## 📜 Version Management
 
-This project uses [standard-version](https://github.com/conventional-changelog/standard-version) for automated version management. Run `bun run release` to create a new version.
+This project uses [standard-version](https://github.com/conventional-changelog/standard-version) for automated version management. Run `npm run release` to create a new version.
 
 ### Commit Message Format
 
@@ -137,10 +136,10 @@ This project uses [standard-version](https://github.com/conventional-changelog/s
    ```
 2. Build the project:
    ```bash
-   bun run build
+   npm run build
    ```
 3. Publish the package:
    ```bash
    npm publish
    ```
-   Remember to update the version number using `bun run release` before publishing new versions.
+   Remember to update the version number using `npm run release` before publishing new versions.
