@@ -1,5 +1,6 @@
 {
   "name": "mcp-scryfall",
+  "version": "0.1.1",
   "description": "An MCP server for Scryfall's Magic: The Gathering card search",
   "author": {
     "name": "Anders Haig",
