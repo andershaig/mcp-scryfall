@@ -1,6 +1,6 @@
-import type { ToolRegistration } from '@/types';
-import { makeJsonSchema } from '@/utils/makeJsonSchema';
-import { type SearchCardsSchema, searchCardsSchema } from './schema';
+import type { ToolRegistration } from '../../types.js';
+import { makeJsonSchema } from '../../utils/makeJsonSchema.js';
+import { type SearchCardsSchema, searchCardsSchema } from './schema.js';
 import * as Scry from 'scryfall-sdk';
 
 // Set up Scryfall agent

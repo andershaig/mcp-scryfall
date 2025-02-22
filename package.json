@@ -21,26 +21,27 @@
     "dist"
   ],
   "scripts": {
-    "prebuild": "bun scripts/prebuild.ts",
-    "build": "bun build ./src/main.ts --outdir dist --target node && chmod +x dist/main.js",
-    "start": "bun run dist/main.ts",
-    "test": "bun test",
+    "prebuild": "tsx scripts/prebuild.ts",
+    "build": "tsc --outDir dist && chmod +x dist/main.js",
+    "start": "node dist/main.js",
+    "test": "tsx --test src/**/*.test.ts",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build",
-    "lint": "bunx biome lint --write src",
-    "format": "bunx biome format --write src",
-    "check": "bunx biome check --write src",
-    "release": "standard-version && bun run update-version",
-    "release:minor": "standard-version --release-as minor && bun run update-version",
-    "release:major": "standard-version --release-as major && bun run update-version",
-    "release:patch": "standard-version --release-as patch && bun run update-version",
+    "lint": "npx biome lint --write src",
+    "format": "npx biome format --write src",
+    "check": "npx biome check --write src",
+    "release": "standard-version && npm run update-version",
+    "release:minor": "standard-version --release-as minor && npm run update-version",
+    "release:major": "standard-version --release-as major && npm run update-version",
+    "release:patch": "standard-version --release-as patch && npm run update-version",
     "update-version": "sed -i '' -e 's/export const VERSION = .*/export const VERSION = '\"'$(node -p 'require(\"./package.json\").version')'\"';/' src/main.ts",
-    "create-tool": "bun scripts/create-tool.ts"
+    "create-tool": "tsx scripts/create-tool.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@types/bun": "latest",
-    "standard-version": "^9.5.0"
+    "@types/node": "^22.13.5",
+    "standard-version": "^9.5.0",
+    "tsx": "^4.19.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

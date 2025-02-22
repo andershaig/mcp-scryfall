@@ -9,7 +9,8 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { createTools } from './tools';
+import type { ToolRegistration } from './types.js';
+import { createTools } from './tools/index.js';
 
 /* You can remove this section if you don't need to validate command line arguments */
 /* You'll have to handle the error yourself */
@@ -42,14 +43,14 @@ const tools = createTools();
 
 // Register tools
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
-  tools: tools.map(({ handler, ...tool }) => tool),
+  tools: tools.map(({ handler, ...tool }: ToolRegistration<unknown>) => tool),
 }));
 
 // Register tool handlers
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
     const { name, arguments: args } = request.params;
-    const tool = tools.find((t) => t.name === name);
+    const tool = tools.find((t: ToolRegistration<unknown>) => t.name === name);
 
     if (!tool) {
       throw new Error(`Unknown tool: ${name}`);

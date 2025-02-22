@@ -1,35 +1,44 @@
-import type { JSONSchema7 } from "json-schema";
+import type { JSONSchema7 } from 'json-schema';
 
 /**
  * Recursively checks whether every schema (and subschema) has a `description`.
- * 
+ *
  * @param schema A JSONSchema7-compliant object
  * @param path   The current path used for error reporting (for internal recursion)
  * @returns      An array of error messages indicating which fields are missing a description
  */
 export function validateSchemaDescriptions(
   schema: JSONSchema7,
-  path = "root"
+  path = 'root'
 ): string[] {
+  if (!schema) {
+    return [];
+  }
+
   const errors: string[] = [];
 
   // Check if the current schema has a description (skip root)
-  if (path !== "root" && !schema.description) {
+  if (path !== 'root' && !schema.description) {
     errors.push(`Missing description at: ${path}`);
   }
 
   // 1. Check properties for object types
-  if (schema.type === "object" && schema.properties) {
-    for (const [propertyName, propertySchema] of Object.entries(schema.properties)) {
+  if ((schema.type === 'object' || schema.properties) && schema.properties) {
+    for (const [propertyName, propertySchema] of Object.entries(
+      schema.properties
+    )) {
       const propertyPath = `${path}.properties.${propertyName}`;
       errors.push(
-        ...validateSchemaDescriptions(propertySchema as JSONSchema7, propertyPath)
+        ...validateSchemaDescriptions(
+          propertySchema as JSONSchema7,
+          propertyPath
+        )
       );
     }
   }
 
   // 2. Check items for array types
-  if (schema.type === "array" && schema.items) {
+  if (schema.type === 'array' && schema.items) {
     // items could be a single schema or an array of schemas
     if (Array.isArray(schema.items)) {
       schema.items.forEach((itemSchema, index) => {
@@ -78,7 +87,9 @@ export function validateSchemaDescriptions(
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   if ((schema as any).definitions) {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    for (const [defName, defSchema] of Object.entries((schema as any).definitions)) {
+    for (const [defName, defSchema] of Object.entries(
+      (schema as any).definitions
+    )) {
       const defPath = `${path}.definitions.${defName}`;
       errors.push(
         ...validateSchemaDescriptions(defSchema as JSONSchema7, defPath)
@@ -119,7 +130,6 @@ export function validateSchemaDescriptions(
   // 6. Return the collected error messages
   return errors;
 }
-
 
 // [
 //   'Missing description at: root.properties.name',

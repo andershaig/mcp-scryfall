@@ -1,6 +1,7 @@
-import { describe, expect, it } from 'bun:test';
-import { searchCardsSchema } from './schema';
-import { searchCards } from './index';
+import { describe, it } from 'node:test';
+import { strict as assert } from 'node:assert';
+import { searchCardsSchema } from './schema.js';
+import { searchCards } from './index.js';
 
 describe('searchCards Tool', () => {
   describe('Schema Validation', () => {
@@ -18,7 +19,7 @@ describe('searchCards Tool', () => {
 
       validInputs.forEach((input) => {
         const result = searchCardsSchema.safeParse(input);
-        expect(result.success).toBe(true);
+        assert.equal(result.success, true);
       });
     });
 
@@ -32,7 +33,7 @@ describe('searchCards Tool', () => {
 
       invalidInputs.forEach((input) => {
         const result = searchCardsSchema.safeParse(input);
-        expect(result.success).toBe(false);
+        assert.equal(result.success, false);
       });
     });
   });
@@ -47,9 +48,9 @@ describe('searchCards Tool', () => {
       });
 
       console.log('\nSearch Results:\n', result);
-      expect(result).toBeTruthy();
-      expect(typeof result).toBe('string');
-      expect(result.length).toBeGreaterThan(0);
+      assert.ok(result);
+      assert.equal(typeof result, 'string');
+      assert.ok(result.length > 0);
     });
 
     it('should handle queries with no results', async () => {
@@ -57,7 +58,7 @@ describe('searchCards Tool', () => {
         query: 'name:definitelynotarealcard',
       });
 
-      expect(result).toBe('No cards found matching your query.');
+      assert.equal(result, 'No cards found matching your query.');
     });
 
     it('should handle invalid queries', async () => {
@@ -65,7 +66,7 @@ describe('searchCards Tool', () => {
         query: 'cmc>cmc', // Invalid comparison that Scryfall explicitly rejects
       });
 
-      expect(result).toBe('No cards found matching your query.');
+      assert.equal(result, 'No cards found matching your query.');
     });
 
     it('should handle invalid Scryfall syntax', async () => {
@@ -73,7 +74,7 @@ describe('searchCards Tool', () => {
         query: 'is:slick cmc>cmc', // Known invalid Scryfall syntax
       });
 
-      expect(result).toBe('No cards found matching your query.');
+      assert.equal(result, 'No cards found matching your query.');
     });
   });
 });

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import type { PathLike } from 'node:fs';
-import { promises as fs } from 'node:fs';
-import path from 'node:path';
-import readline from 'node:readline';
-import { fileURLToPath } from 'node:url';
+import type { PathLike } from 'fs';
+import { promises as fs } from 'fs';
+import path from 'path';
+import readline from 'readline';
+import { fileURLToPath } from 'url';
 
 // 1) Define __dirname in ES Module context
 const __filename = fileURLToPath(import.meta.url);
@@ -220,21 +220,22 @@ export type ${capitalToolName}Schema = z.infer<typeof ${toolName}Schema>;
     // ---------------------------------------------------------------------
     // 3) Create a minimal test file
     // ---------------------------------------------------------------------
-    const testContent = `import { describe, expect, it } from "bun:test";
-import { ${toolName}Schema } from "./schema";
-import { ${toolName} } from "./index";
+    const testContent = `import { describe, it } from "node:test";
+    import { strict as assert } from "node:assert";
+    import { ${toolName}Schema } from "./schema";
+    import { ${toolName} } from "./index";
 
-describe("${toolName} Tool", () => {
-  it("should parse valid input", () => {
-    const result = ${toolName}Schema.safeParse({ name: "John" });
-    expect(result.success).toBe(true);
-  });
+    describe("${toolName} Tool", () => {
+      it("should parse valid input", () => {
+        const result = ${toolName}Schema.safeParse({ name: "John" });
+        assert.equal(result.success, true);
+      });
 
-  it("should handle the main function", () => {
-    const output = ${toolName}({ name: "John" });
-    expect(output).toBe("Hello John");
-  });
-});
+      it("should handle the main function", () => {
+        const output = ${toolName}({ name: "John" });
+        assert.equal(output, "Hello John");
+      });
+    });
 `;
     await fs.writeFile(path.join(toolDir, `${toolName}.test.ts`), testContent);
 
